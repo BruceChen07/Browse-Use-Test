@@ -5,6 +5,11 @@ description = "A Browser Use agent example project"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "accelerate>=1.12.0",
     "browser-use>=0.11.3",
+    "pillow>=12.1.0",
     "python-dotenv>=1.0.1",
+    "torch>=2.10.0",
+    "torchvision>=0.25.0",
+    "transformers>=5.0.0",
 ]
