@@ -280,7 +280,7 @@ python-dotenv==1.2.1
     #   pydantic-settings
 python-multipart==0.0.21
     # via mcp
-pywin32==311
+pywin32==311; sys_platform == "win32"
     # via
     #   mcp
     #   portalocker
