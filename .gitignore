@@ -9,3 +9,16 @@ wheels/
 # Virtual environments
 .venv
 .env
+
+# IDE settings
+.vscode/
+
+# Project output and temp files
+Results/
+downloads/
+edge-cdp-profile/
+*.log
+*.png
+*.pdf
+*.jpg
+

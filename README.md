@@ -1,83 +1,75 @@
-# Browser Use Agent Example
+# SNOW KB Storage Solution
 
-This project demonstrates how to use the [Browser Use](https://github.com/browser-use/browser-use) library to create an AI agent that controls a web browser to perform tasks.
+This project automates the process of downloading Knowledge Base (KB) articles from ServiceNow (SNOW) as high-quality PDF documents and full-page screenshots. It leverages the [Browser Use](https://github.com/browser-use/browser-use) library and Chrome DevTools Protocol (CDP) to handle complex page rendering, lazy loading, and scrolling issues.
 
 ## Features
 
-- **Automated Browser Control**: Uses Playwright (via browser-use) to navigate and interact with websites.
-- **LLM Integration**: Uses `ChatBrowserUse` (or other configured LLMs) to understand tasks and make decisions.
-- **Environment Management**: Uses `uv` for fast Python package management.
+- **Automated Login & Navigation**: Can handle manual login flows or automated navigation to specific KB articles.
+- **High-Fidelity Capture**: 
+  - **Full-Page PDF**: Generates searchable, vector-based PDFs of the entire article without scrollbars.
+  - **Full-Page Screenshot**: Captures the complete rendered page as a PNG image.
+- **Smart Expansion**: Automatically expands scrollable containers and iframes to ensure no content is hidden.
+- **Lazy Loading Handling**: Pre-scrolls and waits for dynamic content to load before capturing.
 
 ## Prerequisites
 
-- **Python**: Version 3.11 or higher (3.13 is configured in this project).
-- **uv**: A fast Python package installer and resolver. [Install uv](https://docs.astral.sh/uv/getting-started/installation/).
-- **Browser Use API Key**: Required for using the `ChatBrowserUse` model. Get it from [Browser Use Cloud](https://browser-use.com/).
+- **Windows OS** (Recommended for PowerShell script support)
+- **Python 3.11+**
+- **Microsoft Edge** (Installed in default location)
+- **uv** (Optional, for fast dependency management) or standard `pip`.
 
 ## Installation
 
-1.  **Clone the repository** (if you haven't already):
+1.  **Clone the repository**:
     ```bash
     git clone <your-repo-url>
-    cd BrowseUseTest
+    cd "SNOW KB Storage Solution"
     ```
 
 2.  **Install dependencies**:
-    This project uses `uv` for dependency management.
+    ```bash
+    pip install -r requirements.txt
+    ```
+    *Or if using uv:*
     ```bash
     uv sync
     ```
-    This will create a virtual environment (`.venv`) and install all required packages specified in `pyproject.toml`.
 
-3.  **Install Playwright browsers**:
-    The browser-use library requires Playwright browsers to be installed.
+3.  **Install Playwright Browsers**:
     ```bash
-    uv run playwright install
+    playwright install
     ```
-
-## Configuration
-
-1.  **Create a `.env` file**:
-    Copy the example configuration or create a new `.env` file in the project root.
-    ```bash
-    # Windows (PowerShell)
-    New-Item -Path .env -ItemType File
-    ```
-
-2.  **Add your API Key**:
-    Open the `.env` file and add your Browser Use API key:
-    ```env
-    BROWSER_USE_API_KEY=your_actual_api_key_here
-    ```
-    *(Note: The `.env` file is git-ignored to protect your secrets.)*
 
 ## Usage
 
-To run the agent, execute the `main.py` script using `uv`:
+### One-Click Execution (Recommended)
 
-```bash
-uv run main.py
+Use the provided PowerShell script to automatically start Edge in debug mode and run the downloader:
+
+```powershell
+.\run_kb_download.ps1
 ```
 
-### Modifying the Task
-Open `main.py` and modify the `task` parameter in the `Agent` initialization to change what the agent does:
+This script will:
+1.  Launch Microsoft Edge with remote debugging enabled (Port 9222).
+2.  Set necessary environment variables (Target URL, login mode, etc.).
+3.  Execute the `KBDownload.py` Python script.
 
-```python
-agent = Agent(
-    task="Your new task description here",
-    llm=llm,
-    browser=browser,
-)
+### Manual Configuration
+
+You can modify `run_kb_download.ps1` to change the target KB article URL:
+
+```powershell
+$env:MANUAL_LOGIN_URL = "https://marsprod.service-now.com/kb_view.do?sys_kb_id=YOUR_KB_ID_HERE"
 ```
 
 ## Project Structure
 
-- `main.py`: The entry point script containing the agent logic.
-- `.env`: Configuration file for environment variables (API keys).
-- `pyproject.toml`: Project metadata and dependencies.
-- `uv.lock`: Lock file ensuring reproducible builds.
+- `KBDownload.py`: Core Python script containing the logic for browser control, page expansion, and capturing.
+- `run_kb_download.ps1`: PowerShell wrapper for easy execution and environment setup.
+- `requirements.txt`: Python dependency list.
+- `Results/`: Directory where downloaded PDFs and Screenshots are stored (ignored by git).
 
-## Troubleshooting
+## License
 
-- **Browser not opening?** Ensure you've run `uv run playwright install`.
-- **API Key errors?** Double-check your `.env` file and ensure the variable name is exactly `BROWSER_USE_API_KEY`.
+MIT License
